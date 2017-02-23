@@ -275,3 +275,18 @@ function stripe_civicrm_managed(&$entities) {
 
   return _stripe_civix_civicrm_managed($entities);
 }
+
+/**
+ * Implements hook_civicrm_alterContent().
+ *
+ */
+function stripe_civicrm_alterContent(&$content, $context, $tplName, &$object) {
+  if ($context == 'form') {
+    $stripe_key = stripe_get_key($object);
+    if ($context === 'form' && empty($stripe_key)) {
+      return;
+    }
+    $stripeJSURL = CRM_Core_Resources::singleton()->getUrl('com.drastikbydesign.stripe', 'js/civicrm_stripe.js');
+    $content .= "<script src='{$stripeJSURL}'></script>";
+  }
+}
