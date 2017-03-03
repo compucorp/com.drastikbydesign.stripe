@@ -1,0 +1,22 @@
+<StripePaymentTestSettings>
+  <site>
+    <url></url>
+    <drupal_admin_name></drupal_admin_name>
+    <drupal_admin_password></drupal_admin_password>
+    <drupal_path></drupal_path>
+  </site>
+  <payment>
+    <email>test@localhost.net</email>
+    <credit_card_number>4242424242424242</credit_card_number>
+    <cvv2>111</cvv2>
+    <credit_card_exp_date_month>12</credit_card_exp_date_month>
+    <credit_card_exp_date_year>2027</credit_card_exp_date_year>
+    <billing_first_name>Test First Name</billing_first_name>
+    <billing_last_name>Test Last Name</billing_last_name>
+    <billing_street_address>Test Street Address</billing_street_address>
+    <billing_city>Test City</billing_city>
+    <billing_country_id>1226</billing_country_id>
+    <billing_state_province_id>9999</billing_state_province_id>
+    <billing_postal_code>ABC</billing_postal_code>
+  </payment>
+</StripePaymentTestSettings>
