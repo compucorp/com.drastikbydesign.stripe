@@ -38,6 +38,24 @@
     }
   }
 
+  /**
+   * Gets Payment Processor input name (may vary depending on CiviCRM version)
+   * within given form.
+   *
+   * @param {object} $form
+   *
+   * @return {string}
+   */
+  function getPaymentProcessorFieldName($form) {
+    var paymentProcessorFieldName = 'payment_processor';
+
+    if ($form.find('input[name="payment_processor_id"]').length) {
+      paymentProcessorFieldName = 'payment_processor_id';
+    }
+
+    return paymentProcessorFieldName;
+  }
+
   // Prepare the form.
   $(document).ready(function() {
     $.getScript('https://js.stripe.com/v2/', function () {
@@ -54,6 +72,12 @@
       }
     }
     $form   = $('form.stripe-payment-form');
+
+    if ($form.find(".crm-section.payment_processor-section").length > 0) {
+      // Mark default payment processor as selected.
+      $form.find('div.payment_processor-section input[checked="checked"]').prop('checked', true);
+    }
+
     if (isWebform) {
       $submit = $form.find('.button-primary');
     }
@@ -155,10 +179,12 @@
         }
       }
 
+      var paymentProcessorFieldName = getPaymentProcessorFieldName($form);
+
       // Handle multiple payment options and Stripe not being chosen.
       if ($form.find(".crm-section.payment_processor-section").length > 0) {
-        if ($form.find('input[name="payment_processor"]:checked').length) {
-          processorId=$form.find('input[name="payment_processor"]:checked').val();
+        if ($form.find('input[name="' + paymentProcessorFieldName + '"]:checked').length) {
+          processorId=$form.find('input[name="' + paymentProcessorFieldName + '"]:checked').val();
           if (!($form.find('input[name="stripe_token"]').length) || ($('#stripe-id').length && $('#stripe-id').val() != processorId)) {
             return true;
           }
@@ -170,7 +196,7 @@
       }
 
       // Handle pay later (option value '0' in payment_processor radio group).
-      if ($form.find('input[name="payment_processor"]:checked').length && !parseInt($form.find('input[name="payment_processor"]:checked').val())) {
+      if ($form.find('input[name="' + paymentProcessorFieldName + '"]:checked').length && !parseInt($form.find('input[name="' + paymentProcessorFieldName + '"]:checked').val())) {
         return true;
       }
 
