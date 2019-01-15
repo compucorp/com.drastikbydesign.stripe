@@ -163,6 +163,20 @@
           }
         }
       }
+      else {
+        // Skip if total amount is 0
+        if (typeof calculateTotalFee !== 'undefined' && $.isFunction(calculateTotalFee)) {
+          var total_amount_tmp =  calculateTotalFee();
+          if (total_amount_tmp == 0) {
+            return true;
+          }
+        }
+        else if ($form.find('input#total_amount').length) {
+          if ($form.find('input#total_amount').val() == 0) {
+            return true;
+          }
+        }
+      }
       // Disable the submit button to prevent repeated clicks, cache button text, restore if Stripe returns error
       buttonText = $submit.attr('value');
       $submit.prop('disabled', true).attr('value', 'Processing');
