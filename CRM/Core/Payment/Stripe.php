@@ -669,4 +669,23 @@ class CRM_Core_Payment_Stripe extends CRM_Core_Payment {
   function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('Use direct billing instead of Transfer method.'));
   }
+
+  /**
+   * Stripe payment instrument validation.
+   *
+   * @param array $values
+   * @param array $errors
+   */
+  public function validatePaymentInstrument($values, &$errors) {
+    $mandatoryFields = $this->getMandatoryFields();
+
+    // set credit_card_number and cvv2 as not required as we have stripe_token
+    $mandatoryFields['credit_card_number']['is_required'] = FALSE;
+    $mandatoryFields['cvv2']['is_required'] = FALSE;
+    CRM_Core_Form::validateMandatoryFields($mandatoryFields, $values, $errors);
+
+    if (empty($_POST['stripe_token'])) {
+      $errors['stripe_token'] = ts('Stripe token not found.');
+    }
+  }
 }
