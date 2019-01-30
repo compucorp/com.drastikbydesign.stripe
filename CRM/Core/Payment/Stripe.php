@@ -671,21 +671,56 @@ class CRM_Core_Payment_Stripe extends CRM_Core_Payment {
   }
 
   /**
-   * Stripe payment instrument validation.
-   *
-   * @param array $values
-   * @param array $errors
+   * @inheritdoc
+   */
+  protected function getCreditCardFormFields() {
+    $formFields = parent::getCreditCardFormFields();
+    // Add 'stripe_token' field to credit-card fields
+    $formFields[] = 'stripe_token';
+
+    return $formFields;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected function getMandatoryFields() {
+    $mandatoryFields = array();
+    // We do not require neither credit_card_number nor cvv2 because we use stripe_token
+    $notRequired = array('credit_card_number', 'cvv2');
+
+    foreach ($this->getAllFields() as $field_name => $field_spec) {
+      if (!empty($field_spec['is_required']) && !in_array($field_spec['name'], $notRequired)) {
+        $mandatoryFields[$field_name] = $field_spec;
+      }
+    }
+
+    return $mandatoryFields;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getPaymentFormFieldsMetadata() {
+    $paymentFormFieldsMetadata = parent::getPaymentFormFieldsMetadata();
+    // Add 'stripe_token' to form fields metadata
+    $paymentFormFieldsMetadata['stripe_token'] = array(
+      'htmlType' => 'hidden',
+      'name' => 'stripe_token',
+      'title' => '',
+      'attributes' => array(
+        'id' => 'stripe-token'
+      ),
+      'is_required' => TRUE,
+    );
+    
+    return $paymentFormFieldsMetadata;
+  }
+
+  /**
+   * @inheritdoc
    */
   public function validatePaymentInstrument($values, &$errors) {
-    $mandatoryFields = $this->getMandatoryFields();
-
-    // set credit_card_number and cvv2 as not required as we have stripe_token
-    $mandatoryFields['credit_card_number']['is_required'] = FALSE;
-    $mandatoryFields['cvv2']['is_required'] = FALSE;
-    CRM_Core_Form::validateMandatoryFields($mandatoryFields, $values, $errors);
-
-    if (empty($_POST['stripe_token'])) {
-      $errors['stripe_token'] = ts('Stripe token not found.');
-    }
+    CRM_Core_Form::validateMandatoryFields($this->getMandatoryFields(), $values, $errors);
   }
 }
