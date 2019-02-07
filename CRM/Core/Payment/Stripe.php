@@ -684,23 +684,6 @@ class CRM_Core_Payment_Stripe extends CRM_Core_Payment {
   /**
    * @inheritdoc
    */
-  protected function getMandatoryFields() {
-    $mandatoryFields = array();
-    // We do not require neither credit_card_number nor cvv2 because we use stripe_token
-    $notRequired = array('credit_card_number', 'cvv2');
-
-    foreach ($this->getAllFields() as $field_name => $field_spec) {
-      if (!empty($field_spec['is_required']) && !in_array($field_spec['name'], $notRequired)) {
-        $mandatoryFields[$field_name] = $field_spec;
-      }
-    }
-
-    return $mandatoryFields;
-  }
-
-  /**
-   * @inheritdoc
-   */
   public function getPaymentFormFieldsMetadata() {
     $paymentFormFieldsMetadata = parent::getPaymentFormFieldsMetadata();
     // Add 'stripe_token' to form fields metadata
@@ -711,7 +694,6 @@ class CRM_Core_Payment_Stripe extends CRM_Core_Payment {
       'attributes' => array(
         'id' => 'stripe-token'
       ),
-      'is_required' => TRUE,
     );
     
     return $paymentFormFieldsMetadata;
@@ -721,6 +703,14 @@ class CRM_Core_Payment_Stripe extends CRM_Core_Payment {
    * @inheritdoc
    */
   public function validatePaymentInstrument($values, &$errors) {
-    CRM_Core_Form::validateMandatoryFields($this->getMandatoryFields(), $values, $errors);
+    $mandatoryFields = $this->getMandatoryFields();
+
+    // We do not require neither credit_card_number nor cvv2 because we use stripe_token
+    if (!empty($values['stripe_token'])) {
+      $mandatoryFields['credit_card_number']['is_required'] = FALSE;
+      $mandatoryFields['cvv2']['is_required'] = FALSE;
+    }
+
+    CRM_Core_Form::validateMandatoryFields($mandatoryFields, $values, $errors);
   }
 }
