@@ -67,8 +67,11 @@
       $('form.webform-client-form').addClass('stripe-payment-form');
     }
     else {
-      if (!($('.stripe-payment-form').length)) {
+      if (!($('.stripe-payment-form').length) && $('#crm-container > form').length) {
         $('#crm-container > form').addClass('stripe-payment-form');
+      }
+      else if (!($('.stripe-payment-form').length) && $('#crm-main-content-wrapper > form').length) {
+        $('#crm-main-content-wrapper > form').addClass('stripe-payment-form');
       }
     }
     $form   = $('form.stripe-payment-form');
