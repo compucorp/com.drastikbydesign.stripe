@@ -167,9 +167,9 @@ function stripe_civicrm_buildForm($formName, &$form) {
 
   // Add some hidden fields for Stripe.
   if (!$form->elementExists('stripe_token')) {
-    $form->setAttribute('class', $form->getAttribute('class') . ' stripe-payment-form');
     $form->addElement('hidden', 'stripe_token', $stripe_token, array('id' => 'stripe-token'));
   }
+  $form->setAttribute('class', $form->getAttribute('class') . ' stripe-payment-form');
   stripe_add_stripe_js($stripe_key, $form);
 
   // Add email field as it would usually be found on donation forms.
