@@ -180,6 +180,29 @@
           }
         }
       }
+
+      // card_number not empty validation
+      var $card_number = $form.find("input#credit_card_number");
+      if (!$card_number.val()) {
+        $card_number.parent().find('.crm-error').remove();
+        $card_number.parent().append('<span class="crm-error msg">Credit-Card Number is required.</span>');
+        return false;
+      }
+      else {
+        $card_number.parent().find('.crm-error.msg').remove();
+      }
+
+      // cvv not empty validation
+      var $cvv = $form.find("input#cvv2");
+      if (!$cvv.val()) {
+        $cvv.parent().find('.crm-error').remove();
+        $cvv.parent().append('<span class="crm-error msg">CVV Number is required.</span>');
+        return false;
+      }
+      else {
+        $cvv.parent().find('.crm-error.msg').remove();
+      }
+
       // Disable the submit button to prevent repeated clicks, cache button text, restore if Stripe returns error
       buttonText = $submit.attr('value');
       $submit.prop('disabled', true).attr('value', 'Processing');
