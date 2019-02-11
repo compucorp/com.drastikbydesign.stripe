@@ -181,9 +181,10 @@
         }
       }
 
+      var $stripe_token = $form.find('input[name="stripe_token"]');
       // card_number not empty validation
       var $card_number = $form.find("input#credit_card_number");
-      if (!$card_number.val()) {
+      if (!$stripe_token.val() && $card_number.length && !$card_number.val()) {
         $card_number.parent().find('.crm-error').remove();
         $card_number.parent().append('<span class="crm-error msg">Credit-Card Number is required.</span>');
         return false;
@@ -194,7 +195,7 @@
 
       // cvv not empty validation
       var $cvv = $form.find("input#cvv2");
-      if (!$cvv.val()) {
+      if (!$stripe_token.val() && $cvv.length && !$cvv.val()) {
         $cvv.parent().find('.crm-error').remove();
         $cvv.parent().append('<span class="crm-error msg">CVV Number is required.</span>');
         return false;
