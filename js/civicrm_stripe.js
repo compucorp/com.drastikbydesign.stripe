@@ -23,7 +23,8 @@
       + '</ul>'
       + '</div>');
 
-      $submit.removeAttr('disabled').attr('value', buttonText);
+      $form.parent().unblock();
+      $submit.removeAttr('disabled').prop('disabled', false).attr('value', buttonText);
 
     }
     else {
@@ -32,7 +33,6 @@
       $form.find("input#stripe-token").val(token);
       $form.find("input#credit_card_number").removeAttr('name');
       $form.find("input#cvv2").removeAttr('name');
-      $submit.prop('disabled', false);
       window.onbeforeunload = null;
       $form.get(0).submit();
     }
@@ -250,7 +250,8 @@
         exp_month:   cc_month,
         exp_year:    cc_year
       }, stripeResponseHandler);
-
+      
+      $form.parent().block();
       return false;
     });
   });
