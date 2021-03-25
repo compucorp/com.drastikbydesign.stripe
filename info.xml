@@ -18,7 +18,7 @@
     <ver>4.6</ver>
     <ver>4.7</ver>
   </compatibility>
-  <comments>PATCH 1</comments>
+  <comments>PATCH 2</comments>
   <comments>http://drastikbydesign.com/blog-entry/civicrm-stripe-payment-processor</comments>
   <civix>
     <namespace>CRM/Stripe</namespace>
